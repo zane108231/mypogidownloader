@@ -12,7 +12,7 @@ app = FastAPI()
 # Allow requests from Live Server
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500", "https://yt-downloader-esk1.onrender.com"],
+    allow_origins=["http://127.0.0.1:5500", "https://mypogidownloader.onrender.com"],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
