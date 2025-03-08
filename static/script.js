@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000"; // FastAPI backend
+const API_URL = "http://127.0.0.1:8000"; // Change to your Render app URL when deployed
 
 async function downloadVideo() {
     const videoUrl = document.getElementById("videoUrl").value;
