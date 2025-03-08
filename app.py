@@ -9,23 +9,28 @@ import glob
 
 app = FastAPI()
 
-# Allow requests from Live Server & Render
+# Allow requests from both Live Server & Render
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500", "https://yt-downloader-esk1.onrender.com"],
+    allow_origins=["http://127.0.0.1:5500", "https://mypogidownloader.onrender.com"],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
-# Serve static files (CSS, JS)
+# Mount static files for frontend
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Serve index.html at root `/`
+@app.get("/")
+def serve_index():
+    return FileResponse("static/index.html")
 
 # Ensure downloads folder exists
 DOWNLOAD_FOLDER = "downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-# Path to cookies.txt (Make sure this file is uploaded to your backend)
+# Path to cookies.txt
 COOKIES_FILE = "cookies.txt"
 
 class VideoRequest(BaseModel):
@@ -35,7 +40,7 @@ def get_metadata(url: str):
     ydl_opts = {
         "quiet": True,
         "noplaylist": True,
-        "cookies": COOKIES_FILE,  # Use cookies for authentication
+        "cookies": COOKIES_FILE,  # ✅ Use cookies for authentication
     }
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
