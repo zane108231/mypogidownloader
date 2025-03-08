@@ -3,38 +3,40 @@ from fastapi.middleware.cors import CORSMiddleware
 from yt_dlp import YoutubeDL
 from pydantic import BaseModel
 from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles  # Import StaticFiles
+from fastapi.staticfiles import StaticFiles
 import os
 import glob
 
 app = FastAPI()
 
-# Allow requests from Live Server
+# Allow requests from Live Server & Render
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://mypogidownloader.onrender.com"],
+    allow_origins=["http://127.0.0.1:5500", "https://yt-downloader-esk1.onrender.com"],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
-# Mount static files
+# Serve static files (CSS, JS)
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Serve index.html at root `/`
-@app.get("/")
-def serve_index():
-    return FileResponse("static/index.html")
 
 # Ensure downloads folder exists
 DOWNLOAD_FOLDER = "downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
+# Path to cookies.txt (Make sure this file is uploaded to your backend)
+COOKIES_FILE = "cookies.txt"
+
 class VideoRequest(BaseModel):
     video_url: str
 
 def get_metadata(url: str):
-    ydl_opts = {"quiet": True, "noplaylist": True}
+    ydl_opts = {
+        "quiet": True,
+        "noplaylist": True,
+        "cookies": COOKIES_FILE,  # Use cookies for authentication
+    }
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         return {
@@ -54,7 +56,13 @@ def get_next_filename():
 def download_video(url: str):
     filename = get_next_filename()
     output_path = os.path.join(DOWNLOAD_FOLDER, filename)
-    ydl_opts = {"format": "best", "outtmpl": output_path}
+    
+    ydl_opts = {
+        "format": "best",
+        "outtmpl": output_path,
+        "cookies": COOKIES_FILE,  # ✅ Use cookies for authentication
+    }
+    
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         return {"title": info["title"], "filename": filename, "path": output_path}
@@ -66,14 +74,14 @@ def get_video_metadata(request: VideoRequest):
     except Exception as e:
         return {"error": str(e)}
 
-@app.post("/download/")  # Handle the download endpoint
+@app.post("/download/")
 def download_video_api(request: VideoRequest):
     try:
         return download_video(request.video_url)
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/download-file/{filename}")  # Serve downloaded file
+@app.get("/download-file/{filename}")
 def serve_file(filename: str, background_tasks: BackgroundTasks):
     file_path = os.path.join(DOWNLOAD_FOLDER, filename)
     if not os.path.exists(file_path):
