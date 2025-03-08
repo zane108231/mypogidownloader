@@ -1,0 +1,55 @@
+fastapi\index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">vieUrl</div>
+        <nav>
+            <a href="#"><i class="fas fa-home"></i> Home</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+            <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+            <a href="#"><i class="fas fa-download"></i> Install</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Download YouTube Videos in High Quality!</h1>
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-infinity"></i>
+                <span>Unlimited Downloads</span>
+            </div>
+            <div class="feature">
+                <i class="fas fa-check-circle"></i>
+                <span>No Watermark!</span>
+            </div>
+        </div>
+
+        <div class="download-form">
+            <div class="input-wrapper">
+                <input type="text" id="videoUrl" placeholder="Paste YouTube Link Here">
+            </div>
+            <div class="buttons">
+                <button class="download-button" onclick="downloadVideo()">
+                    <i class="fas fa-download"></i> Download
+                </button>
+                <button class="paste-button" onclick="pasteFromClipboard()">
+                    <i class="fas fa-paste"></i> Paste
+                </button>
+            </div>
+        </div>
+        <div id="download-status"></div>
+    </section>
+    <script src="static/script.js"></script>
+</body>
+</html>
