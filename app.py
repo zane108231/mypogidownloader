@@ -12,14 +12,14 @@ app = FastAPI()
 # Allow requests from Live Server
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500", "https://yt-downloader-esk1.onrender.com"],
+    allow_origins=["http://127.0.0.1:5500"],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
-# Serve static files (index.html, CSS, JS)
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# Serve static files (CSS, JS, images)
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Ensure downloads folder exists
 DOWNLOAD_FOLDER = "downloads"
