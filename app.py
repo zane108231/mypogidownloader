@@ -18,8 +18,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve static files (CSS, JS, images)
+# Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Serve index.html at root `/`
+@app.get("/")
+def serve_index():
+    return FileResponse("static/index.html")
 
 # Ensure downloads folder exists
 DOWNLOAD_FOLDER = "downloads"
