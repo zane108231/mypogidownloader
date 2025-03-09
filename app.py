@@ -37,12 +37,12 @@ class VideoRequest(BaseModel):
     video_url: str
 
 def get_metadata(url: str):
-ydl_opts = {
-    "quiet": True,
-    "noplaylist": True,
-    "cookies": COOKIES_FILE,
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.3",
-}
+    ydl_opts = {
+        "quiet": True,
+        "noplaylist": True,
+        "cookies": COOKIES_FILE,
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.3",
+    }
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         return {
@@ -63,12 +63,14 @@ def download_video(url: str):
     filename = get_next_filename()
     output_path = os.path.join(DOWNLOAD_FOLDER, filename)
     
-ydl_opts = {
-    "quiet": True,
-    "noplaylist": True,
-    "cookies": COOKIES_FILE,
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.3",
-}
+    ydl_opts = {
+        "format": "best",
+        "outtmpl": output_path,
+        "quiet": True,
+        "noplaylist": True,
+        "cookies": COOKIES_FILE,
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.3",
+    }
     
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
